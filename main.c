@@ -118,25 +118,6 @@ void printDBC_array(struct Array *array) {
     }
 }
 
-void sendCANframe(struct can_frame *frame, struct Array *array) {
-    for (unsigned short i = 0; i < array->size; i++) {
-        frame->can_id = array->messages[i].id;
-        frame->can_dlc = array->messages[i].length;
-        
-        if (array->messages[i].id == frame->can_id) {
-            memcpy(frame->data, array->messages[i].frame, array->messages[i].length);
-            frame->can_dlc = array->messages[i].length;
-            break;
-        }
-        
-    }
-
-    printf("CAN ID: %X, DLC: %d, Data: ", frame->can_id, frame->can_dlc);
-    for (int i = 0; i < frame->can_dlc; i++) {
-        printf("%02X ", frame->data[i]);
-    }
-    printf("\n");
-}
 
 int main(int argc, char *argv[])
 {
@@ -174,23 +155,17 @@ int main(int argc, char *argv[])
 	// TODO: Bind socket to can0 interface
 	bind(s, (struct sockaddr *)&addr, sizeof(addr));
 
-    frame.can_id = 0x34;
-	frame.can_dlc = 5;
-	frame.data[0] = 0x68;
-	frame.data[1] = 0x65;
-	frame.data[2] = 0x6C;
-	frame.data[3] = 0x6C;
-	frame.data[4] = 0x6F;
-	write(s, &frame, sizeof(frame));
+    for (unsigned short i = 0; i < dbcArray.size; i++) {
+        frame.can_id = dbcArray.messages[i].id;
+        frame.can_dlc = dbcArray.messages[i].length;
+        
+        for(unsigned short j = 0; j < dbcArray.messages[i].length; j++){
+            frame.data[j] = dbcArray.messages[i].frame[j];
+        }
 
-	frame.can_id = 0x123456 | CAN_EFF_FLAG;
-	frame.can_dlc = 5;
-	frame.data[0] = 0x77;
-	frame.data[1] = 0x6F;
-	frame.data[2] = 0x72;
-	frame.data[3] = 0x6C;
-	frame.data[4] = 0x64;
-	write(s, &frame, sizeof(frame));
+        write(s, &frame, sizeof(frame));
+    }
+
 	
 	close(s);
 
