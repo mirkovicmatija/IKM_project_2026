@@ -11,13 +11,14 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
+//struct to hold the array of messages
 struct Array {
     unsigned short size;
     unsigned short capacity;
     struct CAN_DBC_Message *messages;
 } Array;
 
-
+//struct to hold the message data
 struct CAN_DBC_Message {
     unsigned int id;
     unsigned int length;
@@ -26,10 +27,9 @@ struct CAN_DBC_Message {
 } CAN_DBC_Message;
 
 
-
+// Function to append a new message to the array
 void appendDBC_array(struct Array *array, struct CAN_DBC_Message new_message) {
     if (array->size >= array->capacity) {
-        // Resize the array
         array->capacity *= 2;
         array->messages = (struct CAN_DBC_Message*)realloc(array->messages, array->capacity * sizeof(struct CAN_DBC_Message));
     }
@@ -37,6 +37,7 @@ void appendDBC_array(struct Array *array, struct CAN_DBC_Message new_message) {
     array->size++;
 }
 
+// Function to free the memory allocated for the array
 void freeDBC_array(struct Array *array) {
     free(array->messages);
     array->messages = NULL;
@@ -44,11 +45,12 @@ void freeDBC_array(struct Array *array) {
     array->capacity = 0;
 }
 
-
+// Function to convert physical value to CAN data
 unsigned int getCANdataFromPhysical(int physicalValue, double factor, double offset) {
     return (unsigned int)((physicalValue - offset)/ factor);
 }
 
+// Function to insert signal into message by calculating the correct byte and bit position based on the start bit, signal length, and endianness
 void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, unsigned int signal_length, unsigned int signal_value, const unsigned short endian) {
     // Calculate the byte and bit position
     unsigned int byte_index = start_bit / 8;
@@ -63,12 +65,12 @@ void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, uns
                 bit_index = 0;
                 byte_index = byte_index + ((endian)? 1 : - 1);
             }        
-}
-    //return message;
-}
+}}
 
+// Function to parse the DBC file and populate the array with messages and signals
 void dbcParser(const char* filename, struct Array *array, const int value) {
 
+    // Open the DBC file for reading
     FILE* file = fopen(filename, "r");
     if (!file) {
         fprintf(stderr, "Error: Could not open file %s\n", filename);
@@ -77,12 +79,13 @@ void dbcParser(const char* filename, struct Array *array, const int value) {
     
     char line[256];
 
+    // Read the file line by line
     while (fgets(line, sizeof(line), file)) {
         if (strncmp(line, "BO_ ", 4) == 0) {
-            // Process Message Header Line and extract ID, name of process, and Length
+           
             struct CAN_DBC_Message message = {0,0,{0},""};
 
-
+            // Process Message Header Line and extract ID, name of process, and Length
             sscanf(line, "BO_ %u %s %u ", &message.id, message.name, &message.length);
           
             appendDBC_array(array, message);
@@ -109,6 +112,7 @@ void dbcParser(const char* filename, struct Array *array, const int value) {
     fclose(file);
 }
 
+// Function to print the contents of the array for debugging purposes
 void printDBC_array(struct Array *array) {
     for (unsigned short i = 0; i < array->size; i++) {
         printf("Message ID: %u, Name: %s, Length: %u\n", array->messages[i].id, array->messages[i].name, array->messages[i].length);
@@ -121,7 +125,7 @@ void printDBC_array(struct Array *array) {
 
 int main(int argc, char *argv[])
 {
-    // Your code here
+    // Allocate memory for the array of messages
     struct CAN_DBC_Message *message = calloc(10, sizeof(struct CAN_DBC_Message));
     struct Array dbcArray = {0, 10, message};
 
