@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <unistd.h>
-
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <net/if.h>
-
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
@@ -68,7 +65,7 @@ void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, uns
 }}
 
 // Function to parse the DBC file and populate the array with messages and signals
-void dbcParser(const char* filename, struct Array *array, const int value) {
+void dbcParser(const char* filename, struct Array *array) {
 
     // Open the DBC file for reading
     FILE* file = fopen(filename, "r");
@@ -98,11 +95,15 @@ void dbcParser(const char* filename, struct Array *array, const int value) {
             unsigned int min, max;
             unsigned short is_endiad;
             double factor, offset;
+            unsigned int valuefield;
+
 
             sscanf(line, "   SG_ %s : %u|%u@%hu%c (%lf,%lf) [%u|%u]", sg_line, &start_bit, &signal_length ,&is_endiad, &is_signed, &factor, &offset, &min, &max);
             
+            printf("Enter a value of %s atribute: ", sg_line);
+            scanf("%u",&valuefield);
             
-            unsigned int canValue = getCANdataFromPhysical(value, factor, offset);
+            unsigned int canValue = getCANdataFromPhysical(valuefield, factor, offset);
     
             insertSignalIntoMessage(array->messages[array->size-1].frame, start_bit, signal_length, canValue, is_endiad);
           
@@ -130,7 +131,7 @@ int main(int argc, char *argv[])
     struct Array dbcArray = {0, 10, message};
 
     if (argc > 1) {
-        dbcParser(argv[1], &dbcArray, atoi(argv[2]));
+        dbcParser(argv[1], &dbcArray);
     }
     printDBC_array(&dbcArray);
 
@@ -170,7 +171,6 @@ int main(int argc, char *argv[])
         write(s, &frame, sizeof(frame));
     }
 
-	
 	close(s);
 
     freeDBC_array(&dbcArray);
