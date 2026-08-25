@@ -10,7 +10,7 @@ LDLIBS   := -lm
 
 # Project files
 TARGET  := can_generator
-SOURCES := src/main.c \
+SOURCES := src/can_generator.c \
            src/dbc.c 
 OBJECTS := $(SOURCES:.c=.o)
 
