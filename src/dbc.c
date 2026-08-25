@@ -23,7 +23,7 @@ void freeDBC_array(struct Array *array) {
 }
 
 // Function to convert physical value to CAN data
-unsigned int getCANdataFromPhysical(int physicalValue, double factor, double offset) {
+unsigned int getCANdataFromPhysical(unsigned int physicalValue, double factor, double offset) {
     return (unsigned int)((physicalValue - offset)/ factor);
 }
 
