@@ -40,7 +40,7 @@ void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, uns
             bit_index++;
             if (bit_index == 8) {
                 bit_index = 0;
-                byte_index = byte_index + ((endian)? 1 : - 1);
+                byte_index = ((endian)? byte_index + 1 : byte_index - 1);
             }        
 }}
 

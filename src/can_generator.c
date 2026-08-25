@@ -1,4 +1,3 @@
-#include "dbc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +7,7 @@
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
-
+#include "dbc.h"
 
 int main(int argc, char *argv[])
 {

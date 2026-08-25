@@ -7,7 +7,9 @@
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include "src/dbc.h"
 
+/* 
 //struct to hold the array of messages
 struct Array {
     unsigned short size;
@@ -122,7 +124,7 @@ void printDBC_array(struct Array *array) {
         }
     }
 }
-
+*/
 
 int main(int argc, char *argv[])
 {

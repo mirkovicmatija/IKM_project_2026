@@ -6,14 +6,14 @@
 #include <string.h>
 #include <unistd.h>
 
-struct Array {
+extern struct Array {
     unsigned short size;
     unsigned short capacity;
     struct CAN_DBC_Message *messages;
 } Array;
 
 //struct to hold the message data
-struct CAN_DBC_Message {
+extern struct CAN_DBC_Message {
     unsigned int id;
     unsigned int length;
     unsigned char frame[8];

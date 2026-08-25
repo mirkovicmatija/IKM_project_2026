@@ -4,14 +4,14 @@ RM       := rm -f
 
 # Compiler flags
 CPPFLAGS := -D_DEFAULT_SOURCE -Iinclude
-CFLAGS   := -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -O2
+CFLAGS   :=  #-std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -O2
 LDFLAGS  :=
 LDLIBS   := -lm
 
 # Project files
 TARGET  := can_generator
-SOURCES := src/can_generator.c \
-           src/dbc.c 
+SOURCES := src/dbc.c \
+		src/can_generator.c
 OBJECTS := $(SOURCES:.c=.o)
 
 .PHONY: all clean rebuild
