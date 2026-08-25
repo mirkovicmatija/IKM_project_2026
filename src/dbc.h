@@ -22,7 +22,7 @@ struct CAN_DBC_Message {
 
 void appendDBC_array(struct Array *array, struct CAN_DBC_Message new_message);
 void freeDBC_array(struct Array *array);
-unsigned int getCANdataFromPhysical(unsigned int physicalValue, double factor, double offset);
+unsigned int getCANdataFromPhysical(int physicalValue, double factor, double offset);
 void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, unsigned int signal_length, unsigned int signal_value, const unsigned short endian);
 void dbcParser(const char* filename, struct Array *array);
 void printDBC_array(struct Array *array);

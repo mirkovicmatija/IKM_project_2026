@@ -23,7 +23,7 @@ void freeDBC_array(struct Array *array) {
 }
 
 // Function to convert physical value to CAN data
-unsigned int getCANdataFromPhysical(unsigned int physicalValue, double factor, double offset) {
+unsigned int getCANdataFromPhysical(int physicalValue, double factor, double offset) {
     return (unsigned int)((physicalValue - offset)/ factor);
 }
 
@@ -69,11 +69,11 @@ void dbcParser(const char* filename, struct Array *array) {
             unsigned int min, max;
             unsigned short is_endiad;
             double factor, offset;
-            unsigned int valuefield;
+            int valuefield;
 
             sscanf(line, "   SG_ %s : %u|%u@%hu%c (%lf,%lf) [%u|%u]", sg_line, &start_bit, &signal_length ,&is_endiad, &is_signed, &factor, &offset, &min, &max);
             printf("Enter a value of %s atribute: ", sg_line);
-            scanf("%u",&valuefield);
+            scanf("%d",&valuefield);
             unsigned int canValue = getCANdataFromPhysical(valuefield, factor, offset);
             insertSignalIntoMessage(array->messages[array->size-1].frame, start_bit, signal_length, canValue, is_endiad); 
         }
