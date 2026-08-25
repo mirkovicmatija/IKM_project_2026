@@ -23,12 +23,12 @@ void freeDBC_array(struct Array *array) {
 }
 
 // Function to convert physical value to CAN data
-unsigned int getCANdataFromPhysical(int physicalValue, double factor, double offset) {
-    return (unsigned int)((physicalValue - offset)/ factor);
+int getCANdataFromPhysical(int physicalValue, double factor, double offset) {
+    return (int)((physicalValue - offset)/ factor);
 }
 
 // Function to insert signal into message by calculating the correct byte and bit position based on the start bit, signal length, and endianness
-void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, unsigned int signal_length, unsigned int signal_value, const unsigned short endian) {
+void insertSignalIntoMessage(unsigned char *message, unsigned int start_bit, unsigned int signal_length, int signal_value, const unsigned short endian) {
     // Calculate the byte and bit position
     unsigned int byte_index = start_bit / 8;
     unsigned int bit_index = start_bit % 8;
@@ -72,9 +72,9 @@ void dbcParser(const char* filename, struct Array *array) {
             int valuefield;
 
             sscanf(line, "   SG_ %s : %u|%u@%hu%c (%lf,%lf) [%u|%u]", sg_line, &start_bit, &signal_length ,&is_endiad, &is_signed, &factor, &offset, &min, &max);
-            printf("Enter a value of %s atribute: ", sg_line);
+            printf("Enter a value of %s atribute (range is from %u to %u): ", sg_line, min, max);
             scanf("%d",&valuefield);
-            unsigned int canValue = getCANdataFromPhysical(valuefield, factor, offset);
+            int canValue = getCANdataFromPhysical(valuefield, factor, offset);
             insertSignalIntoMessage(array->messages[array->size-1].frame, start_bit, signal_length, canValue, is_endiad); 
         }
     }
