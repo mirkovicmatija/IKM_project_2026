@@ -76,4 +76,4 @@ Pokretanjem koda pojavljuje se linija za unos fizičke vrijednosti signala koji 
 
 Nakon završenog unosa podataka potrebno je prebaciti `obd_candump.log` datoteku pomoću komande `scp` sa Raspberry Pi platfomre na uređaj sa intaliranim SavvyCAN programom. Nakon otvaranja programa SavvyCAN potrebno je izabrati opciju `DBC File Manager` i potrebno je unijeti CAN DBC datoteku koji je korišten za pretvaranje. Nakon unosa DBC CAN datoteke potrebno je otvoriti prozor `Playback` i učitati log datoteku.
 
-Video tutorijal može se pronaći na linku:
+Video tutorijal može se pronaći na linku: https://youtu.be/PLyD2AcmKeA
